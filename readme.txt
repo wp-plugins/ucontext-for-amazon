@@ -1,0 +1,18 @@
+=== Plugin Name ===Plugin Name: uContext - Amazon In-Text affiliate linksPlugin URI: http://www.uContext.comDescription: Automatically converts keywords into contextual in-text Amazon affiliate linksAuthor: uContext.comAuthor URI: http://www.uContext.comTags: Amazon, affiliate, contextual, links, ads, advertising, context, intext, hopadsVersion: 3.1
+Automatically converts keywords into contextual in-text Amazon affiliate links
+== Description ==The uContext plug-in automatically locates keywords in your content and turns them into YOUR Amazon contextually related affiliate links. This is a great plug-in if you have a blog with lots of posts, or you have lots of blogs and need something quick, easy, and effective to monetize them.Why make a couple cents per click when you could potentially make $5, $15, $20, or more per sale?= Solution for Ad Blindness =uContext is a perfect solution for ad blindness. When most people have learned to ignore your banners and Adsense links, your in-text affiliate links get clicked because they're right where your visitors are looking...  IN YOUR CONTENT.
+= You're in Control =Unlike other in-text contextual advertising services, you're in control of everything...* How many links appear in your content* Style your affiliate links using CSS or leave them defaulted to your site's style* Turn off auto-keyword discovery and only have links for the keywords you decide* Browse for better product matches to your keywords* Choose the category and other filters for the type of products to create affiliate links to
+= Upgrade to the Premium Version =
+Our premium version adds...* Click reports showing when and what keywords got the most clicks* Bulk keyword editor for easier, faster management of all your keywords* Set site-wide keywords to be use first when uContext tries to create links* Set page/post specific keywords to be use first when uContext tries to create links on the page/post* Link designer so you don't have to mess with your stylesheets to customize they way your affilaite links look* Affiliate link widget shows the affiliate linked product titles relatived to the page/post being displayed.  This is a nice Adsense alternative.* Customize the redirection link for affiliate links (for link cloaking)[http://www.ucontext.com](http://www.ucontext.com)
+== Installation ==
+
+1. Unzip this plug-in into your wp-content/plugins directory
+1. Log-in to your WordPress admin area
+1. Go to "Plugins" in the left admin menu
+1. Look for "uContext for Amazon" in the plugin list
+1. Click "Activate"
+1. Click "uC for Amazon" in the left admin menu
+1. Click on the "Settings" tab
+1. Complete the "Amazon Settings" section
+
+!!! Remember: You must set the "Associate Tag", "Access Key ID", and "Secret Access Key" in the Settings !!!
