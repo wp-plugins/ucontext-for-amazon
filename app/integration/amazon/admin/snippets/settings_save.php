@@ -34,11 +34,6 @@ if (!strlen(trim($form_vars['ucontext4a_private_key'])))
 	self::$form_errors['ucontext4a_private_key'] = 'Your Amazon Secret Access Key is required';
 }
 
-if (!strlen(trim($form_vars['ucontext4a_redirect_slug'])))
-{
-	self::$form_errors['ucontext4a_redirect_slug'] = 'Redirect Slug is required';
-}
-
 update_option('ucontext4a_associate_tag',		trim(@$form_vars['ucontext4a_associate_tag']));
 update_option('ucontext4a_public_key',		trim(@$form_vars['ucontext4a_public_key']));
 update_option('ucontext4a_private_key',		trim(@$form_vars['ucontext4a_private_key']));

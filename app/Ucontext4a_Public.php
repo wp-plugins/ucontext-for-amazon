@@ -13,17 +13,22 @@ class Ucontext4a_Public extends Ucontext4a_Base
 
 	public static function filterContent($content)
 	{
-		global $wpdb, $post;
+		require_once UCONTEXT4A_INTEGRATION_PATH.'/Ucontext4a_Integration.php';
 
-		$display = (int)get_option('ucontext4a_links_display', 0);
-
-		if (!$display || ($display == 1 && $post->post_type == 'post') || ($display == 2 && $post->post_type == 'page'))
+		if (Ucontext4a_Integration::isValidLicense())
 		{
-			if (!(int)get_post_meta($post->ID, 'ucontext4a_disable', true))
-			{
-				$keyword_list = self::getPostKeywordList($post);
+			global $wpdb, $post;
 
-				$content = Ucontext4a_Intext::addInTextLinks($content, $keyword_list, @get_option('ucontext4a_max_links', 5));
+			$display = (int)get_option('ucontext4a_links_display', 0);
+
+			if (!$display || ($display == 1 && $post->post_type == 'post') || ($display == 2 && $post->post_type == 'page'))
+			{
+				if (!(int)get_post_meta($post->ID, 'ucontext4a_disable', true))
+				{
+					$keyword_list = self::getPostKeywordList($post);
+
+					$content = Ucontext4a_Intext::addInTextLinks($content, $keyword_list, @get_option('ucontext4a_max_links', 5));
+				}
 			}
 		}
 
@@ -161,7 +166,14 @@ class Ucontext4a_Public extends Ucontext4a_Base
 			}
 			else
 			{
-				$keyword_list[$keyword]['url'] = trim(home_url(), '/').'/'.get_option('ucontext4a_redirect_slug', 'recommends').'/'.$post->ID.'/'.urlencode($keyword);
+				if (trim(get_option('permalink_structure', '')))
+				{
+					$keyword_list[$keyword]['url'] = trim(site_url(), '/').'/'.@get_option('ucontext4a_redirect_slug', 'recommends').'/'.$post->ID.'/'.urlencode($keyword);
+				}
+				else
+				{
+					$keyword_list[$keyword]['url'] = trim(site_url(), '/').'?'.@get_option('ucontext4a_redirect_slug', 'recommends').'='.urlencode($keyword).'&post_id='.$post->ID;
+				}
 			}
 		}
 

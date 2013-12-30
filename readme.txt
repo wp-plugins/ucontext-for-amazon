@@ -5,7 +5,7 @@ Description: Automatically converts keywords into contextual in-text Amazon affi
 Author: uContext.com
 Author URI: http://www.uContext.com
 Tags: Amazon, affiliate, contextual, links, ads, advertising, context, intext, hopads
-Version: 3.1
+Version: 3.3
 
 Automatically converts keywords into contextual in-text Amazon affiliate links
 

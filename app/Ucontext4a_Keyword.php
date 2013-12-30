@@ -28,22 +28,25 @@ class Ucontext4a_Keyword
 			{
 				require_once UCONTEXT4A_INTEGRATION_PATH.'/Ucontext4a_Integration.php';
 
-				if (!@$keyword['custom_search'] && @$keyword['keyword'])
+				if (Ucontext4a_Integration::isValidLicense())
 				{
-					$keyword['custom_search'] = $keyword['keyword'];
-				}
+					if (!@$keyword['custom_search'] && @$keyword['keyword'])
+					{
+						$keyword['custom_search'] = $keyword['keyword'];
+					}
 
-				$result = Ucontext4a_Integration::search($keyword);
+					$result = Ucontext4a_Integration::search($keyword, $force);
 
-				if ($result)
-				{
-					$search_results = $result['search_results'];
+					if ($result)
+					{
+						$search_results = $result['search_results'];
 
-					$wpdb->query('UPDATE '.Ucontext4a_Base::$table['keyword'].' SET product_id = "'.esc_sql($result['product_id']).'", search_results = "'.esc_sql(serialize($result['search_results'])).'", num_results = '.(int)count($result['search_results']).', last_updated = '.current_time('timestamp').' WHERE keyword_id = '.(int)$keyword['keyword_id']);
-				}
-				else
-				{
-					$wpdb->query('UPDATE '.Ucontext4a_Base::$table['keyword'].' SET last_updated = '.current_time('timestamp').' WHERE keyword_id = '.(int)$keyword['keyword_id']);
+						$wpdb->query('UPDATE '.Ucontext4a_Base::$table['keyword'].' SET product_id = "'.esc_sql($result['product_id']).'", search_results = "'.esc_sql(serialize($result['search_results'])).'", num_results = '.(int)count($result['search_results']).', last_updated = '.current_time('timestamp').' WHERE keyword_id = '.(int)$keyword['keyword_id']);
+					}
+					else
+					{
+						$wpdb->query('UPDATE '.Ucontext4a_Base::$table['keyword'].' SET last_updated = '.current_time('timestamp').' WHERE keyword_id = '.(int)$keyword['keyword_id']);
+					}
 				}
 			}
 		}

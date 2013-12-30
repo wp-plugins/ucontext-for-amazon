@@ -2,10 +2,10 @@
 
 $form_vars = self::$form_vars;
 
-update_option('ucontext4a_nofollow',		(int)@$form_vars['ucontext4a_nofollow']);
+update_option('ucontext4a_nofollow',			(int)@$form_vars['ucontext4a_nofollow']);
 update_option('ucontext4a_new_window',		(int)@$form_vars['ucontext4a_new_window']);
-update_option('ucontext4a_intext_class',	trim(@$form_vars['ucontext4a_intext_class']));
-update_option('ucontext4a_use_style',		(int)@$form_vars['ucontext4a_use_style']);
+update_option('ucontext4a_intext_class',		trim(@$form_vars['ucontext4a_intext_class']));
+update_option('ucontext4a_use_style',			(int)@$form_vars['ucontext4a_use_style']);
 update_option('ucontext4a_link_style',		(int)@$form_vars['ucontext4a_link_style']);
 update_option('ucontext4a_link_underline',	(int)@$form_vars['ucontext4a_link_underline']);
 update_option('ucontext4a_link_color',		trim(@$form_vars['ucontext4a_link_color']));
@@ -48,7 +48,7 @@ if (!self::$form_errors)
 
 		$parts[] = 'color: '.trim($form_vars['ucontext4a_link_color']).';';
 
-		$link_css = 'a.ucontext {'.implode(' ', $parts).'}';
+		$link_css = 'a.'.'ucontext4a'.' {'.implode(' ', $parts).'}';
 
 		update_option('ucontext4a_link_css', $link_css);
 		update_option('ucontext4a_intext_class', 'ucontext4a');
