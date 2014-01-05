@@ -3,12 +3,12 @@
  Plugin Name: uContext for Amazon
  Plugin URI: http://www.uContext.com/
  Description: In-text Amazon affiliate links
- Version: 3.3
+ Version: 3.4
  Author: Summit Media Concepts LLC
  Author URI: http://www.SummitMediaConcepts.com/
  */
 
-define('UCONTEXT4A_VERSION',		'3.3');
+define('UCONTEXT4A_VERSION',		'3.4');
 
 define('UCONTEXT4A_PATH',			dirname(__FILE__));
 define('UCONTEXT4A_APP_PATH',		UCONTEXT4A_PATH.'/app');
@@ -119,7 +119,12 @@ else
 
 	function Ucontext4a_checkRedirect()
 	{
-		$slug = get_option('ucontext4a_redirect_slug', 'recommends');
+		$slug = trim(@get_option('ucontext4a_redirect_slug', 'recommends'));
+
+		if (!$slug)
+		{
+			$slug = 'recommends';
+		}
 
 		if (isset($_REQUEST[$slug]) && $_REQUEST[$slug])
 		{

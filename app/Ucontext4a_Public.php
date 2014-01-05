@@ -166,13 +166,20 @@ class Ucontext4a_Public extends Ucontext4a_Base
 			}
 			else
 			{
+				$slug = trim(@get_option('ucontext4a_redirect_slug', 'recommends'));
+
+				if (!$slug)
+				{
+					$slug = 'recommends';
+				}
+
 				if (trim(get_option('permalink_structure', '')))
 				{
-					$keyword_list[$keyword]['url'] = trim(site_url(), '/').'/'.@get_option('ucontext4a_redirect_slug', 'recommends').'/'.$post->ID.'/'.urlencode($keyword);
+					$keyword_list[$keyword]['url'] = trim(site_url(), '/').'/'.$slug.'/'.$post->ID.'/'.urlencode($keyword);
 				}
 				else
 				{
-					$keyword_list[$keyword]['url'] = trim(site_url(), '/').'?'.@get_option('ucontext4a_redirect_slug', 'recommends').'='.urlencode($keyword).'&post_id='.$post->ID;
+					$keyword_list[$keyword]['url'] = trim(site_url(), '/').'?'.$slug.'='.urlencode($keyword).'&post_id='.$post->ID;
 				}
 			}
 		}
