@@ -4,14 +4,13 @@ $keyword = NULL;
 
 $response = array('success' => true);
 
-@include UCONTEXT4A_INTEGRATION_PATH.'/ajax/snippets/keyword_save.php';
-
 $form_vars['keyword_id']	= (int)@$_REQUEST['keyword_id'];
 $form_vars['keyword']		= stripslashes(trim(@$_POST['keyword']));
 $form_vars['disabled']		= (int)@$_POST['disabled'];
 $form_vars['custom_search']	= stripslashes(trim(@$_POST['custom_search']));
-$form_vars['product_id']	= trim(@$_POST['product_id']);
-$form_vars['config']		= serialize(@$_POST['config']);
+$form_vars['search_index']	= trim(@$_POST['search_index']);
+$form_vars['condition']		= trim(@$_POST['condition']);
+$form_vars['aws_asin']		= trim(@$_POST['aws_asin']);
 
 if (!$form_vars['keyword_id'])
 {
@@ -41,7 +40,7 @@ if ($response['success'] == true)
 
 	if ((int)$form_vars['keyword_id'])
 	{
-		$form_vars['modified'] = current_time('timestamp');
+		$form_vars['modified'] = time();
 
 		$wpdb->update(self::$table['keyword'], $form_vars, array('keyword_id' => $form_vars['keyword_id']));
 
@@ -50,7 +49,7 @@ if ($response['success'] == true)
 	}
 	else
 	{
-		$form_vars['created'] = current_time('timestamp');
+		$form_vars['created'] = time();
 
 		$wpdb->insert(self::$table['keyword'], $form_vars);
 

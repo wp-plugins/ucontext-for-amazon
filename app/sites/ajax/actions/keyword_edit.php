@@ -1,12 +1,11 @@
 <div style="padding: 20px;">
 <?php
 
-require UCONTEXT4A_APP_PATH.'/Ucontext4a_Form.php';
+require UAMAZON_APP_PATH.'/Uamazon_Form.php';
 
 if (isset($_REQUEST['keyword_id']) && (int)$_REQUEST['keyword_id'])
 {
 	$form_vars = $wpdb->get_row('SELECT * FROM '.self::$table['keyword'].' WHERE keyword_id = '.(int)$_REQUEST['keyword_id'], ARRAY_A);
-	$form_vars['config'] = unserialize($form_vars['config']);
 }
 
 if (!@$form_vars['custom_search'] && @$form_vars['keyword'])
@@ -15,7 +14,7 @@ if (!@$form_vars['custom_search'] && @$form_vars['keyword'])
 }
 
 ?>
-<form id="ucontext4a_keyword_edit_form">
+<form id="uamazon_keyword_edit_form">
 <?php
 
 function array_unshift_assoc($arr, $key, $val)
@@ -25,27 +24,33 @@ function array_unshift_assoc($arr, $key, $val)
 	return array_reverse($arr, true);
 }
 
-Ucontext4a_Form::fadeSave();
+Uamazon_Form::fadeSave();
 
-Ucontext4a_Form::startTable();
+Uamazon_Form::startTable();
 
-Ucontext4a_Form::textField('Keyword', 'keyword', @$form_vars['keyword'], 50);
+Uamazon_Form::textField('Keyword', 'keyword', @$form_vars['keyword'], 50);
 
-Ucontext4a_Form::checkboxField('Disable', 'disabled', @$form_vars['disabled'], 'Disables this keyword site-wide');
+Uamazon_Form::checkboxField('Disable', 'disabled', @$form_vars['disabled'], 'Disables this keyword site-wide');
 
-Ucontext4a_Form::textField('Customize Search', 'custom_search', @$form_vars['custom_search'], 50, 'Alternate keyword to be searched in the catalog.');
+Uamazon_Form::textField('Customize Search', 'custom_search', @$form_vars['custom_search'], 50, 'Alternate keyword to be searched on Amazon.');
 
-@include UCONTEXT4A_INTEGRATION_PATH.'/ajax/snippets/keyword_edit.php';
+require UAMAZON_LIST_PATH.'/search_index_list.php';
+$search_index_list = array_unshift_assoc($search_index_list, 'default', '-- Default Category --');
+Uamazon_Form::selectField('Category', 'search_index', @$form_vars['search_index'], $search_index_list);
+
+require UAMAZON_LIST_PATH.'/condition_list.php';
+$condition_list = array_unshift_assoc($condition_list, 'default', '-- Default Condition --');
+Uamazon_Form::selectField('Condition', 'condition', @$form_vars['condition'], $condition_list);
 
 ?>
 	<tr>
-		<td colspan="2"><div id="ucontext4a_search_results"></div></td>
+		<td colspan="2"><div id="uamazon_search_results"></div></td>
 	</tr>
 	<tr>
 		<td colspan="2">
-			<input id="ucontext4a_save_button" type="button" class="ucontext4a_button" value="Save" />&nbsp;
+			<input id="uamazon_save_button" type="button" class="uamazon_button" value="Save" />&nbsp;
 			<?php if ((int)@$form_vars['keyword_id']){ ?>
-			<input id="ucontext4a_delete_button" type="button" class="ucontext4a_button" value="Delete" onclick="uC_deleteKeyword(<?php echo (int)@$form_vars['keyword_id'] ?>)" />
+			<input id="uamazon_delete_button" type="button" class="uamazon_button" value="Delete" onclick="AZL_deleteKeyword(<?php echo (int)@$form_vars['keyword_id'] ?>)" />
 			<?php } ?>
 		</td>
 	</tr>
@@ -56,16 +61,16 @@ Ucontext4a_Form::textField('Customize Search', 'custom_search', @$form_vars['cus
 jQuery(document).ready(function(){
 
 	<?php if ((int)@$form_vars['keyword_id']){ ?>
-	jQuery.get('<?php echo admin_url( 'admin-ajax.php' ) ?>?action=ucontext4a_action&do=keyword_search&keyword_id=<?php echo (int)@$form_vars['keyword_id'] ?>', function(data) {
-		jQuery('#ucontext4a_search_results').html(data);
+	jQuery.get('<?php echo admin_url( 'admin-ajax.php' ) ?>?action=uamazon_action&do=keyword_search&keyword_id=<?php echo (int)@$form_vars['keyword_id'] ?>', function(data) {
+		jQuery('#uamazon_search_results').html(data);
 	});
 	<?php } ?>
 
-	jQuery('#ucontext4a_save_button').click( function() {
+	jQuery('#uamazon_save_button').click( function() {
 		jQuery.ajax({
 			type: 'POST',
-			url: '<?php echo admin_url( 'admin-ajax.php' ) ?>?action=ucontext4a_action&do=keyword_save&keyword_id=<?php echo (int)@$form_vars['keyword_id'] ?>',
-			data: jQuery('#ucontext4a_keyword_edit_form').serialize(),
+			url: '<?php echo admin_url( 'admin-ajax.php' ) ?>?action=uamazon_action&do=keyword_save&keyword_id=<?php echo (int)@$form_vars['keyword_id'] ?>',
+			data: jQuery('#uamazon_keyword_edit_form').serialize(),
 			dataType: 'json',
 			success: function( response ) {
 				if (response.success == false)
@@ -83,11 +88,11 @@ jQuery(document).ready(function(){
 				{
 					if (response.keyword_id != null && response.keyword_id > 0)
 					{
-						uC_editKeyword(response.keyword_id, 1);
+						AZL_editKeyword(response.keyword_id, 1);
 
 						if (response.new_keyword == true || response.refresh_list == true)
 						{
-							uC_loadKeywordList('');
+							AZL_loadKeywordList('');
 						}
 					}
 					else
@@ -99,10 +104,10 @@ jQuery(document).ready(function(){
 		});
 	});
 
-	jQuery('#ucontext4a_delete_button').click( function() {
+	jQuery('#uamazon_delete_button').click( function() {
 		jQuery.ajax({
 			type: 'POST',
-			url: '<?php echo admin_url( 'admin-ajax.php' ) ?>?action=ucontext4a_action&do=keyword_delete&keyword_id=<?php echo (int)@$form_vars['keyword_id'] ?>',
+			url: '<?php echo admin_url( 'admin-ajax.php' ) ?>?action=uamazon_action&do=keyword_delete&keyword_id=<?php echo (int)@$form_vars['keyword_id'] ?>',
 			dataType: 'json',
 			success: function( response ) {
 				if (response.success == false)
@@ -118,8 +123,8 @@ jQuery(document).ready(function(){
 				}
 				else
 				{
-					jQuery('#ucontext4a_keyword_edit').html('');
-					uC_loadKeywordList('');
+					jQuery('#uamazon_keyword_edit').html('');
+					AZL_loadKeywordList('');
 				}
 	  		}
 		});

@@ -2,23 +2,23 @@
 
 $form_vars = self::$form_vars;
 
-update_option('ucontext4a_nofollow',			(int)@$form_vars['ucontext4a_nofollow']);
-update_option('ucontext4a_new_window',		(int)@$form_vars['ucontext4a_new_window']);
-update_option('ucontext4a_intext_class',		trim(@$form_vars['ucontext4a_intext_class']));
-update_option('ucontext4a_use_style',			(int)@$form_vars['ucontext4a_use_style']);
-update_option('ucontext4a_link_style',		(int)@$form_vars['ucontext4a_link_style']);
-update_option('ucontext4a_link_underline',	(int)@$form_vars['ucontext4a_link_underline']);
-update_option('ucontext4a_link_color',		trim(@$form_vars['ucontext4a_link_color']));
+update_option('uamazon_nofollow',		(int)@$form_vars['uamazon_nofollow']);
+update_option('uamazon_new_window',		(int)@$form_vars['uamazon_new_window']);
+update_option('uamazon_intext_class',	trim(@$form_vars['uamazon_intext_class']));
+update_option('uamazon_use_style',		(int)@$form_vars['uamazon_use_style']);
+update_option('uamazon_link_style',		(int)@$form_vars['uamazon_link_style']);
+update_option('uamazon_link_underline',	(int)@$form_vars['uamazon_link_underline']);
+update_option('uamazon_link_color',		trim(@$form_vars['uamazon_link_color']));
 
 if (!self::$form_errors)
 {
-	if ((int)$form_vars['ucontext4a_use_style'])
+	if ((int)$form_vars['uamazon_use_style'])
 	{
 		$parts = array();
 
 		$underline_width = 1;
 
-		switch ((int)$form_vars['ucontext4a_link_style'])
+		switch ((int)$form_vars['uamazon_link_style'])
 		{
 			case 1:
 				$parts[] = 'font-weight: bold;';
@@ -34,7 +34,7 @@ if (!self::$form_errors)
 				break;
 		}
 
-		switch ((int)$form_vars['ucontext4a_link_underline'])
+		switch ((int)$form_vars['uamazon_link_underline'])
 		{
 			case 1:
 				$parts[] = 'text-decoration: underline;';
@@ -42,16 +42,16 @@ if (!self::$form_errors)
 			case 2:
 				$parts[] = 'padding-bottom: 1px;';
 				$parts[] = 'text-decoration: underline;';
-				$parts[] = 'border-bottom: '.$underline_width.'px solid '.trim($form_vars['ucontext4a_link_color']).';';
+				$parts[] = 'border-bottom: '.$underline_width.'px solid '.trim($form_vars['uamazon_link_color']).';';
 				break;
 		}
 
-		$parts[] = 'color: '.trim($form_vars['ucontext4a_link_color']).';';
+		$parts[] = 'color: '.trim($form_vars['uamazon_link_color']).';';
 
-		$link_css = 'a.'.'ucontext4a'.' {'.implode(' ', $parts).'}';
+		$link_css = 'a.uamazon {'.implode(' ', $parts).'}';
 
-		update_option('ucontext4a_link_css', $link_css);
-		update_option('ucontext4a_intext_class', 'ucontext4a');
+		update_option('uamazon_link_css', $link_css);
+		update_option('uamazon_intext_class', 'uamazon');
 
 	}
 
