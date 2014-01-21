@@ -1,30 +1,30 @@
-	<form action="admin.php?page=<?php echo self::$name ?>&action=designer_save" method="POST">
+<form action="admin.php?page=<?php echo self::$name ?>&action=designer_save" method="POST">
 <?php
 
-require UAMAZON_APP_PATH.'/Uamazon_Form.php';
+require UCONTEXT4A_APP_PATH.'/Ucontext4a_Form.php';
 
 if (!count(self::$form_errors))
 {
-	self::$form_vars['uamazon_nofollow']			= get_option('uamazon_nofollow');
-	self::$form_vars['uamazon_new_window']		= get_option('uamazon_new_window');
-	self::$form_vars['uamazon_intext_class']		= get_option('uamazon_intext_class');
-	self::$form_vars['uamazon_use_style']			= get_option('uamazon_use_style');
-	self::$form_vars['uamazon_link_style']		= get_option('uamazon_link_style');
-	self::$form_vars['uamazon_link_underline']	= get_option('uamazon_link_underline');
-	self::$form_vars['uamazon_link_color']		= get_option('uamazon_link_color', '#009900');
+	self::$form_vars['ucontext4a_nofollow']			= get_option('ucontext4a_nofollow');
+	self::$form_vars['ucontext4a_new_window']		= get_option('ucontext4a_new_window');
+	self::$form_vars['ucontext4a_intext_class']		= get_option('ucontext4a_intext_class');
+	self::$form_vars['ucontext4a_use_style']			= get_option('ucontext4a_use_style');
+	self::$form_vars['ucontext4a_link_style']		= get_option('ucontext4a_link_style');
+	self::$form_vars['ucontext4a_link_underline']	= get_option('ucontext4a_link_underline');
+	self::$form_vars['ucontext4a_link_color']		= get_option('ucontext4a_link_color', '#009900');
 }
 
-Uamazon_Form::fadeSave();
+Ucontext4a_Form::fadeSave();
 
-Uamazon_Form::startTable();
+Ucontext4a_Form::startTable();
 
-Uamazon_Form::listErrors(self::$form_errors);
+Ucontext4a_Form::listErrors(self::$form_errors);
 
-Uamazon_Form::section('Basic Settings');
+Ucontext4a_Form::section('Basic Settings');
 
-Uamazon_Form::checkboxField('Use nofollow', 'form_vars[uamazon_nofollow]', self::$form_vars['uamazon_nofollow'], 'Includes "nofollow" attribute on links (anchor tags) created by this plug-in.');
+Ucontext4a_Form::checkboxField('Use nofollow', 'form_vars[ucontext4a_nofollow]', self::$form_vars['ucontext4a_nofollow'], 'Includes "nofollow" attribute on links (anchor tags) created by this plug-in.');
 
-Uamazon_Form::checkboxField('Open New Window', 'form_vars[uamazon_new_window]', self::$form_vars['uamazon_new_window'], 'Includes target="_blank" attribute on links (anchor tags) created by this plug-in.');
+Ucontext4a_Form::checkboxField('Open New Window', 'form_vars[ucontext4a_new_window]', self::$form_vars['ucontext4a_new_window'], 'Includes target="_blank" attribute on links (anchor tags) created by this plug-in.');
 
 $extra = <<<END
 <div style="width: 400px;">This is a style sheet class name to included on
@@ -36,39 +36,15 @@ more information about CSS</a><br />
 </div>
 END;
 
-Uamazon_Form::textField('Anchor CSS Class', 'form_vars[uamazon_intext_class]', self::$form_vars['uamazon_intext_class'], 20, $extra);
+Ucontext4a_Form::textField('Anchor CSS Class', 'form_vars[ucontext4a_intext_class]', self::$form_vars['ucontext4a_intext_class'], 20, $extra);
 
-Uamazon_Form::clearRow();
+Ucontext4a_Form::clearRow();
 
-Uamazon_Form::section('Customize link');
+Ucontext4a_Form::section('Customize link');
 
-Uamazon_Form::checkboxField('Use these settings', 'form_vars[uamazon_use_style]', self::$form_vars['uamazon_use_style'], 'Use the Style, Underline, and Link color settings below for in-text links.');
-
-$style_list = array(
-'Theme default',
-'Bold',
-'Italic',
-'Bold Italic'
-);
-
-Uamazon_Form::selectField('Style', 'form_vars[uamazon_link_style]', self::$form_vars['uamazon_link_style'], $style_list);
-
-$underline_list = array(
-'Theme default',
-'Single',
-'Double'
-);
-
-Uamazon_Form::selectField('Underline', 'form_vars[uamazon_link_underline]', self::$form_vars['uamazon_link_underline'], $underline_list);
+require dirname(__FILE__).'/designer_style.php';
 
 ?>
-		<tr>
-			<th>Link color:</th>
-			<td nowrap="nowrap">
-				<input type="text" id="link_color" name="form_vars[uamazon_link_color]" size="12" value="<?= self::$form_vars['uamazon_link_color'] ?>" />
-				<div class="caption">Leave blank for theme default</div>
-			</td>
-		</tr>
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
@@ -80,8 +56,3 @@ Uamazon_Form::selectField('Underline', 'form_vars[uamazon_link_underline]', self
 	</table>
 
 	</form>
-
-<script src="<?= UAMAZON_PLUGIN_URL ?>/includes/modcoder_excolor/jquery.modcoder.excolor.js" type="text/javascript"></script>
-<script type="text/javascript">
-jQuery("#link_color").modcoder_excolor();
-</script>

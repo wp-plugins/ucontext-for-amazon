@@ -3,90 +3,111 @@
  Plugin Name: uContext for Amazon
  Plugin URI: http://www.uContext.com/
  Description: In-text Amazon affiliate links
- Version: 1.1
+ Version: 3.5
  Author: Summit Media Concepts LLC
- Author URI: http://www.uContext.com/
+ Author URI: http://www.SummitMediaConcepts.com/
  */
 
-define('UAMAZON_VERSION',	'1.3');
+define('UCONTEXT4A_VERSION',		'3.5');
 
-define('UAMAZON_PATH',		dirname(__FILE__));
-define('UAMAZON_APP_PATH',	UAMAZON_PATH.'/app');
-define('UAMAZON_LIST_PATH',	UAMAZON_APP_PATH.'/lists');
+define('UCONTEXT4A_PATH',			dirname(__FILE__));
+define('UCONTEXT4A_APP_PATH',		UCONTEXT4A_PATH.'/app');
+define('UCONTEXT4A_LIST_PATH',	UCONTEXT4A_APP_PATH.'/lists');
+define('UCONTEXT4A_PLUGIN_URL',	plugins_url(NULL, __FILE__));
 
-define('UAMAZON_PLUGIN_URL', plugins_url(NULL, __FILE__));
+define('UCONTEXT4A_INTEGRATION_TITLE',	'Amazon');
+define('UCONTEXT4A_INTEGRATION_HANDLE',	'amazon');
+define('UCONTEXT4A_INTEGRATION_PATH',	UCONTEXT4A_APP_PATH.'/integration/'.UCONTEXT4A_INTEGRATION_HANDLE);
+
 
 if (is_admin())
 {
 	// Do admin stuff
 
-	require_once UAMAZON_APP_PATH.'/Uamazon_Admin.php';
-	Uamazon_Admin::init();
+	require_once UCONTEXT4A_APP_PATH.'/Ucontext4a_Admin.php';
+	Ucontext4a_Admin::init();
 
-	function Uamazon_activatePlugin()
+	function Ucontext4a_activatePlugin()
 	{
-		Uamazon_Admin::upgradePlugin();
+		if (UCONTEXT4A_INTEGRATION_PATH.'/activate.php')
+		{
+			include UCONTEXT4A_INTEGRATION_PATH.'/activate.php';
+		}
 
-		require_once UAMAZON_APP_PATH.'/Uamazon_Cron.php';
-		Uamazon_Cron::init();
-		Uamazon_Cron::updateAgents();
+		Ucontext4a_Admin::upgradePlugin();
+
+		require_once UCONTEXT4A_APP_PATH.'/Ucontext4a_Cron.php';
+		Ucontext4a_Cron::init();
+		Ucontext4a_Cron::updateAgents();
 	}
 
-	function Uamazon_displayView()
+	function Ucontext4a_displayView()
 	{
-		Uamazon_Admin::displayView();
+		Ucontext4a_Admin::displayView();
 	}
 
-	function Uamazon_addAdminMenu()
+	function Ucontext4a_addAdminMenu()
 	{
-		add_menu_page('uContext for Amazon', 'uC for Amazon', 'update_core', 'uamazon', 'Uamazon_displayView', UAMAZON_PLUGIN_URL.'/includes/icons/ucontext-icon.png');
-
-		add_meta_box('uamazon', __('uContext for Amazon', 'uamazon'), array('Uamazon_Admin', 'displayPostMeta'), 'post');
-		add_meta_box('uamazon', __('uContext for Amazon', 'uamazon'), array('Uamazon_Admin', 'displayPostMeta'), 'page');
+		add_menu_page('uContext for '.UCONTEXT4A_INTEGRATION_TITLE, 'uC for '.UCONTEXT4A_INTEGRATION_TITLE, 'update_core', 'ucontext4a', 'Ucontext4a_displayView', UCONTEXT4A_PLUGIN_URL.'/includes/icons/ucontext-icon.png');
 	}
 
-	function Uamazon_enqueueScripts()
+	function Ucontext4a_enqueueScripts()
 	{
 		wp_enqueue_script('jquery-ui-core');
 		wp_enqueue_script('jquery-ui-dialog');
 	}
 
-	add_action('admin_menu',		'Uamazon_addAdminMenu');
+	function Ucontext4a_admin_notice()
+	{
+		$notice = get_option('ucontext4a_notification');
 
-	add_action('wp_enqueue_scripts', 'Uamazon_enqueueScripts');
+		if ($notice)
+		{
+			echo '<div class="updated"><p>'.$notice.'</p></div>';
+		}
+	}
 
-	add_action('activate_ucontext_for_amazon/ucontext_for_amazon.php', 'Uamazon_activatePlugin');
+	add_action('admin_notices', 'Ucontext4a_admin_notice');
 
-	add_action('edit_post',			array('Uamazon_Admin', 'savePostMeta'));
-	add_action('publish_post',		array('Uamazon_Admin', 'savePostMeta'));
-	add_action('save_post',			array('Uamazon_Admin', 'savePostMeta'));
-	add_action('edit_page_form',	array('Uamazon_Admin', 'savePostMeta'));
+	add_action('admin_menu', 'Ucontext4a_addAdminMenu');
+
+	add_action('wp_enqueue_scripts', 'Ucontext4a_enqueueScripts');
+
+	add_action('activate_ucontext_for_amazon/ucontext_for_amazon.php', 'Ucontext4a_activatePlugin');
+
+	@include(dirname(__FILE__).'/postmeta.php');
+
+	// Carry meta from old plugin version to current
+	if (!get_option('rlm_license_key_'.Ucontext4a_Base::$name) && get_option('ucontext4a_api_key'))
+	{
+		update_option('rlm_license_key_'.Ucontext4a_Base::$name, get_option('ucontext4a_api_key'));
+	}
 }
 else
 {
 	// Do public stuff
 
-	require_once UAMAZON_APP_PATH.'/Uamazon_Public.php';
-	Uamazon_Public::init();
+	require_once UCONTEXT4A_APP_PATH.'/Ucontext4a_Public.php';
+	Ucontext4a_Public::init();
 
-	function Uamazon_filterContent($content)
+	function Ucontext4a_filterContent($content)
 	{
 		global $post;
 
-		Uamazon_Public::processPost($post->ID);
+		Ucontext4a_Public::processPost($post->ID);
 
-		$content = Uamazon_Public::filterContent($content);
+		$content = Ucontext4a_Public::filterContent($content);
 
 		return $content;
 	}
 
-	function Uamazon_publicHead()
+	function Ucontext4a_publicHead()
 	{
-		if (get_option('uamazon_active', 1))
+		if (get_option('ucontext4a_active', 1))
 		{
-			if (get_option('uamazon_use_style', 0))
+			if (get_option('ucontext4a_use_style', 0))
 			{
-				$link_css = get_option('uamazon_link_css');
+				$link_css = get_option('ucontext4a_link_css');
 
 				if ($link_css)
 				{
@@ -96,36 +117,51 @@ else
 		}
 	}
 
-	function Uamazon_checkRedirect()
+	function Ucontext4a_checkRedirect()
 	{
-		$parts = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+		$ucontext4a_redirect_slug = trim(@get_option('ucontext4a_redirect_slug', 'recommends'));
 
-		$slug		= @$parts[0];
-		$post_id	= @$parts[1];
-		$keyword	= urldecode(@$parts[2]);
+		if (!$ucontext4a_redirect_slug)
+		{
+			$ucontext4a_redirect_slug = 'recommends';
+		}
 
-		if ($slug == get_option('uamazon_redirect_slug', 'recommends') && (int)$post_id && $keyword)
+		if (isset($_REQUEST[$ucontext4a_redirect_slug]) && $_REQUEST[$ucontext4a_redirect_slug])
+		{
+			$post_id = @$_REQUEST['post_id'];
+			$keyword = @$_REQUEST[$ucontext4a_redirect_slug];
+		}
+		else
+		{
+			$parts = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+
+			$slug		= @$parts[0];
+			$post_id	= @$parts[1];
+			$keyword	= urldecode(@$parts[2]);
+		}
+
+		if ($slug == $ucontext4a_redirect_slug && (int)$post_id && $keyword)
 		{
 			global $wpdb;
 
-			$keyword = $wpdb->get_row('SELECT * FROM '.Uamazon_Base::$table['keyword'].' WHERE keyword = "'.$wpdb->escape($keyword).'"', ARRAY_A);
+			$keyword = $wpdb->get_row('SELECT * FROM '.Ucontext4a_Base::$table['keyword'].' WHERE keyword = "'.esc_sql($keyword).'"', ARRAY_A);
 
 			if ($keyword)
 			{
 				$search_results = unserialize($keyword['search_results']);
 
-				$url = $search_results[$keyword['aws_asin']]['url'];
+				$url = $search_results[$keyword['product_id']]['url'];
 
 				header('location: '.$url);
 
-				$spider = (int)$wpdb->get_var('SELECT spider_agent_id FROM '.Uamazon_Base::$table['spider_agent'].' WHERE "'.$wpdb->escape($_SERVER['HTTP_USER_AGENT']).'" LIKE CONCAT("%", sig, "%") LIMIT 1');
+				$spider = (int)$wpdb->get_var('SELECT spider_agent_id FROM '.Ucontext4a_Base::$table['spider_agent'].' WHERE "'.esc_sql($_SERVER['HTTP_USER_AGENT']).'" LIKE CONCAT("%", sig, "%") LIMIT 1');
 
 				if ($spider)
 				{
 					$spider = 1;
 				}
 
-				@file_put_contents('/tmp/uc_spider_sql.log', $spider.' = SELECT spider_agent_id FROM '.Uamazon_Base::$table['spider_agent'].' WHERE "'.$wpdb->escape($_SERVER['HTTP_USER_AGENT']).'" LIKE CONCAT("%", sig, "%")'."\n", FILE_APPEND);
+				//@file_put_contents('/tmp/uc_spider_sql.log', $spider.' = SELECT spider_agent_id FROM '.Ucontext4a_Base::$table['spider_agent'].' WHERE "'.esc_sql($_SERVER['HTTP_USER_AGENT']).'" LIKE CONCAT("%", sig, "%")'."\n", FILE_APPEND);
 
 				$timezone = ini_get('date.timezone');
 				if ($timezone)
@@ -146,165 +182,72 @@ else
 				'hour'		=> date('H')
 				);
 
-				$wpdb->insert(Uamazon_Public::$table['click_log'], $click_log);
+				$wpdb->insert(Ucontext4a_Public::$table['click_log'], $click_log);
 
 				exit();
 			}
 		}
 	}
 
-	add_action('plugins_loaded', 'Uamazon_checkRedirect');
+	add_action('plugins_loaded', 'Ucontext4a_checkRedirect', 0);
 
-	add_filter('the_content', 'Uamazon_filterContent', 9999);
-	add_filter('the_content_feed', 'Uamazon_filterContent', 9999);
+	add_filter('the_content', 'Ucontext4a_filterContent', 9999);
+	add_filter('the_content_feed', 'Ucontext4a_filterContent', 9999);
 
-	add_action('wp_head', 'Uamazon_publicHead');
+	add_action('wp_head', 'Ucontext4a_publicHead');
 }
 
-add_action('wp_ajax_uamazon_action', 'Uamazon_Ajax_Action');
+add_action('wp_ajax_ucontext4a_action', 'Ucontext4a_Ajax_Action');
 
-function Uamazon_Ajax_Action()
+function Ucontext4a_Ajax_Action()
 {
-	require_once UAMAZON_APP_PATH.'/Uamazon_Ajax.php';
-	Uamazon_Ajax::init();
-	Uamazon_Ajax::doAjax($_REQUEST['do']);
+	require_once UCONTEXT4A_APP_PATH.'/Ucontext4a_Ajax.php';
+	Ucontext4a_Ajax::init();
+	Ucontext4a_Ajax::doAjax($_REQUEST['do']);
 	exit();
 }
 
 // Cron ===================================================
 
-function Uamazon_scheduleCron()
+function Ucontext4a_scheduleCron()
 {
-	if (!wp_next_scheduled('Uamazon_5MinuteCronEvent'))
+	if (!wp_next_scheduled('Ucontext4a_5MinuteCronEvent'))
 	{
-		wp_schedule_event(time(), '5minutes', 'Uamazon_5MinuteCronEvent');
+		wp_schedule_event(current_time('timestamp'), '5minutes', 'Ucontext4a_5MinuteCronEvent');
 	}
 
-	if (!wp_next_scheduled('Uamazon_30DayCronEvent'))
+	if (!wp_next_scheduled('Ucontext4a_30DayCronEvent'))
 	{
-		wp_schedule_event(time(), '30days', 'Uamazon_30DayCronEvent');
+		wp_schedule_event(current_time('timestamp'), '30days', 'Ucontext4a_30DayCronEvent');
 	}
 }
 
-function Uamazon_do5MinuteCron()
+function Ucontext4a_do5MinuteCron()
 {
-	require_once UAMAZON_APP_PATH.'/Uamazon_Cron.php';
-	Uamazon_Cron::init();
-	Uamazon_Cron::updateKeywordSearchResults();
+	require_once UCONTEXT4A_APP_PATH.'/Ucontext4a_Cron.php';
+	Ucontext4a_Cron::init();
+	Ucontext4a_Cron::updateKeywordSearchResults();
 }
 
-function Uamazon_do30DayCron()
+function Ucontext4a_do30DayCron()
 {
-	require_once UAMAZON_APP_PATH.'/Uamazon_Cron.php';
-	Uamazon_Cron::init();
-	Uamazon_Cron::updateAgents();
+	require_once UCONTEXT4A_APP_PATH.'/Ucontext4a_Cron.php';
+	Ucontext4a_Cron::init();
+	Ucontext4a_Cron::updateAgents();
 }
 
-function Uamazon_addSchedules( $schedules )
+function Ucontext4a_addSchedules( $schedules )
 {
 	$schedules['5minutes']	= array('interval' => 300, 'display' => __('Every 5 Minutes'));
 	$schedules['30days']	= array('interval' => 2592000, 'display' => __('Every 30 Days'));
 	return $schedules;
 }
 
-add_filter('cron_schedules', 'Uamazon_addSchedules');
+add_filter('cron_schedules', 'Ucontext4a_addSchedules');
 
-add_action('Uamazon_5MinuteCronEvent', 'Uamazon_do5MinuteCron');
-add_action('Uamazon_30DayCronEvent', 'Uamazon_do30DayCron');
+add_action('Ucontext4a_5MinuteCronEvent', 'Ucontext4a_do5MinuteCron');
+add_action('Ucontext4a_30DayCronEvent', 'Ucontext4a_do30DayCron');
 
-add_action('wp', 'Uamazon_scheduleCron');
+add_action('wp', 'Ucontext4a_scheduleCron');
 
-
-class uContext_for_Amazon_Widget extends WP_Widget
-{
-
-	function __construct()
-	{
-		parent::__construct(
-	 		'ucontext_for_amazon_widget',
-			'uContext for Amazon Widget',
-		array('description' => __('uContext for Amazon text ads', 'ucontext_for_amazon'))
-		);
-	}
-
-	function widget($args, $instance)
-	{
-		extract($args);
-
-		global $post;
-
-		$keyword_list = Uamazon_Public::getPostKeywordList($post);
-
-		if (is_array($keyword_list) && count($keyword_list))
-		{
-			$title = apply_filters('widget_title', $instance['ucontext_for_amazon_widget_title']);
-
-			echo "\n";
-			echo '<li class="widget ucontext_for_amazon_widget">'."\n";
-			echo '<h2>'.$title.'</h2>'."\n";
-			echo '<ul>'."\n";
-
-			if (!$instance['ucontext_for_amazon_widget_max'])
-			{
-				$instance['ucontext_for_amazon_widget_max'] = 5;
-			}
-
-			$row = 0;
-			$used_titles = array();
-
-			foreach ($keyword_list as $keyword => $record)
-			{
-				if (!(int)@$used_titles[strtolower(trim($record['title']))])
-				{
-					$row++;
-
-					$used_titles[strtolower(trim($record['title']))] = 1;
-
-					echo '<li><a href="'.$record['url'].'">'.$record['title'].'</a></li>'."\n";
-
-					if ($row >= $instance['ucontext_for_amazon_widget_max'])
-					{
-						break;
-					}
-				}
-			}
-
-			echo '</ul>'."\n";
-			echo '</li>'."\n";
-		}
-	}
-
-	function update($new_instance, $old_instance)
-	{
-		$new_instance['ucontext_for_amazon_widget_title'] = $new_instance['ucontext_for_amazon_widget_title'];
-		$new_instance['ucontext_for_amazon_widget_max'] = (int)$new_instance['ucontext_for_amazon_widget_max'];
-
-		return $new_instance;
-	}
-
-	function form($instance)
-	{
-		if (!$instance['ucontext_for_amazon_widget_max'])
-		{
-			$instance['ucontext_for_amazon_widget_max'] = 5;
-		}
-
-		echo '
-		<p>
-			<label for="' . $this->get_field_id('ucontext_for_amazon_widget_title') . '">Title:</label>
-			<input id="' . $this->get_field_id('ucontext_for_amazon_widget_title') . '" name="' . $this->get_field_name('ucontext_for_amazon_widget_title') . '" value="' . $instance['ucontext_for_amazon_widget_title'] . '" style="width: 100px;" />
-		</p>
-		<p>
-			<label for="' . $this->get_field_id('ucontext_for_amazon_widget_max') . '">Max. Links:</label>
-			<input id="' . $this->get_field_id('ucontext_for_amazon_widget_max') . '" name="' . $this->get_field_name('ucontext_for_amazon_widget_max') . '" value="' . $instance['ucontext_for_amazon_widget_max'] . '" style="width: 100px;" />
-		</p>
-		';
-	}
-}
-
-function Uamazon_initWidgets()
-{
-	register_widget('uContext_for_Amazon_Widget');
-}
-
-add_action('widgets_init', 'Uamazon_initWidgets');
+@include(dirname(__FILE__).'/widget.php');
