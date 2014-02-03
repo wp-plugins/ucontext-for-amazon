@@ -9,43 +9,50 @@ class Ucontext4a_Integration_Base
 	{
 		$last_datetime = get_option('rlm_last_license_check_'.Ucontext4a_Base::$name, 0);
 
-		if ($force || $last_datetime < (time() - 86400) || !get_option('rlm_license_status_'.Ucontext4a_Base::$name, ''))
+		if (strlen(trim(get_option('rlm_license_key_'.Ucontext4a_Base::$name))) == 32)
 		{
-			$package = array(
-			'method'		=> 'checkLicense',
-			'site_url'		=> site_url(),
-			'handle'		=> Ucontext4a_Base::$name,
-			'license_key'	=> get_option('rlm_license_key_'.Ucontext4a_Base::$name)
-			);
-
-			$response = self::requestApi($package);
-
-			if (is_wp_error($response))
+			if ($force || $last_datetime < (time() - 86400))
 			{
-				update_option('rlm_notification_'.Ucontext4a_Base::$name, 'Unable to contact RLM API: '.$response->get_error_message());
-			}
-			else
-			{
-				$result = self::decrypt($response['body']);
+				$package = array(
+				'method'		=> 'checkLicense',
+				'site_url'		=> site_url(),
+				'handle'		=> Ucontext4a_Base::$name,
+				'license_key'	=> get_option('rlm_license_key_'.Ucontext4a_Base::$name)
+				);
 
-				if (!(int)$result['valid'])
+				$response = self::requestApi($package);
+
+				if (is_wp_error($response))
 				{
-					update_option('rlm_notification_'.Ucontext4a_Base::$name, '<div class="ucontext4a_error"><strong>'.$result['error_title'].'</strong>'.$result['error_desc'].'</div>');
+					update_option('rlm_notification_'.Ucontext4a_Base::$name, 'Unable to contact RLM API: '.$response->get_error_message());
 				}
 				else
 				{
-					update_option('rlm_notification_'.Ucontext4a_Base::$name, '');
+					$result = self::decrypt($response['body']);
+
+					if (!(int)$result['valid'])
+					{
+						update_option('rlm_notification_'.Ucontext4a_Base::$name, '<div class="ucontext4a_error"><strong>'.$result['error_title'].'</strong>'.$result['error_desc'].'</div>');
+					}
+					else
+					{
+						update_option('rlm_notification_'.Ucontext4a_Base::$name, '');
+					}
+
+					update_option('rlm_license_status_'.Ucontext4a_Base::$name, (int)$result['valid']);
+					update_option('rlm_last_license_check_'.Ucontext4a_Base::$name, time());
+
+					if (@$result['latest_version'])
+					{
+						update_option('rlm_version_'.Ucontext4a_Base::$name, $result['latest_version']);
+					}
+
+					return $result['valid'];
 				}
-
-				update_option('rlm_license_status_'.Ucontext4a_Base::$name, (int)$result['valid']);
-				update_option('rlm_last_license_check_'.Ucontext4a_Base::$name, time());
-
-				if (@$result['latest_version'])
-				{
-					update_option('rlm_version_'.Ucontext4a_Base::$name, $result['latest_version']);
-				}
-
-				return $result['valid'];
+			}
+			else
+			{
+				return get_option('rlm_license_status_'.Ucontext4a_Base::$name, 0);
 			}
 		}
 		else
