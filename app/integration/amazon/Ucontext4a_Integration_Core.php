@@ -100,21 +100,24 @@ class Ucontext4a_Integration_Core extends Ucontext4a_Integration_Base
 
 		if (@$response->Items->Request->Errors->Error->Code == 'AWS.InvalidAccount')
 		{
-			update_option('ucontext4a_notification', 'uContext for '.UCONTEXT4A_INTEGRATION_TITLE.': '.(string)@$response->Items->Request->Errors->Error->Message);
+			update_option('ucontext4a_notification', 'uContext for '.UCONTEXT4A_INTEGRATION_TITLE.': '.(string)@$response->Items->Request->Errors->Error->Message.' AWSAccessKeyId: '.get_option('ucontext4a_public_key'));
 			update_option('ucontext4a_api_disabled', 1);
 		}
 		elseif (@$response->Error->Code == 'InvalidClientTokenId')
 		{
-			update_option('ucontext4a_notification', 'uContext for '.UCONTEXT4A_INTEGRATION_TITLE.': '.(string)@$response->Error->Message);
+			update_option('ucontext4a_notification', 'uContext for '.UCONTEXT4A_INTEGRATION_TITLE.': '.(string)@$response->Error->Message.' AWSAccessKeyId: '.get_option('ucontext4a_public_key'));
 			update_option('ucontext4a_api_disabled', 1);
 		}
 		elseif (@$response->Error->Code == 'SignatureDoesNotMatch')
 		{
-			update_option('ucontext4a_notification', 'uContext for '.UCONTEXT4A_INTEGRATION_TITLE.': '.(string)@$response->Error->Message);
+			update_option('ucontext4a_notification', 'uContext for '.UCONTEXT4A_INTEGRATION_TITLE.': '.(string)@$response->Error->Message.' AWSAccessKeyId: '.get_option('ucontext4a_public_key'));
 			update_option('ucontext4a_api_disabled', 1);
 		}
 		elseif ((int)@$response->Items->TotalResults)
 		{
+			update_option('ucontext4a_notification', '');
+			update_option('ucontext4a_api_disabled', 0);
+
 			$row = 0;
 			$found = FALSE;
 

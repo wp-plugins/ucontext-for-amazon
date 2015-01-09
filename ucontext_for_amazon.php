@@ -48,7 +48,7 @@ if (is_admin())
 
 	function Ucontext4a_addAdminMenu()
 	{
-		add_menu_page('uContext for '.UCONTEXT4A_INTEGRATION_TITLE, 'uC for '.UCONTEXT4A_INTEGRATION_TITLE, 'update_core', 'ucontext4a', 'Ucontext4a_displayView', UCONTEXT4A_PLUGIN_URL.'/includes/icons/ucontext-icon.png');
+		add_menu_page('uContext for '.UCONTEXT4A_INTEGRATION_TITLE, 'uC for '.UCONTEXT4A_INTEGRATION_TITLE, 'activate_plugins', 'ucontext4a', 'Ucontext4a_displayView', UCONTEXT4A_PLUGIN_URL.'/includes/icons/ucontext-icon.png');
 	}
 
 	function Ucontext4a_enqueueScripts()
