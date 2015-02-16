@@ -73,7 +73,7 @@ if (is_admin())
 
 	add_action('wp_enqueue_scripts', 'Ucontext4a_enqueueScripts');
 
-	add_action('activate_ucontext_for_amazon/ucontext_for_amazon.php', 'Ucontext4a_activatePlugin');
+	add_action('activate_ucontext_for_amazon4a_for_amazon4a_for_amazon/ucontext4a_for_amazon.php', 'Ucontext4a_activatePlugin');
 
 	@include(dirname(__FILE__).'/postmeta.php');
 
