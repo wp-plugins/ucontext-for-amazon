@@ -3,12 +3,12 @@
  Plugin Name: uContext for Amazon
  Plugin URI: http://www.uContext.com/
  Description: In-text Amazon affiliate links
- Version: 3.7
+ Version: 3.9
  Author: Summit Media Concepts LLC
  Author URI: http://www.SummitMediaConcepts.com/
  */
 
-define('UCONTEXT4A_VERSION',		'3.7');
+define('UCONTEXT4A_VERSION',		'3.9');
 
 define('UCONTEXT4A_PATH',			dirname(__FILE__));
 define('UCONTEXT4A_APP_PATH',		UCONTEXT4A_PATH.'/app');
@@ -73,7 +73,7 @@ if (is_admin())
 
 	add_action('wp_enqueue_scripts', 'Ucontext4a_enqueueScripts');
 
-	add_action('activate_ucontext_for_amazon4a_for_amazon4a_for_amazon/ucontext4a_for_amazon.php', 'Ucontext4a_activatePlugin');
+	register_activation_hook(__FILE__, 'Ucontext4a_activatePlugin');
 
 	@include(dirname(__FILE__).'/postmeta.php');
 
