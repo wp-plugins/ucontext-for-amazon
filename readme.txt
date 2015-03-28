@@ -2,12 +2,10 @@
 Plugin Name: uContext - Amazon In-Text affiliate links
 Plugin URI: http://www.uContext.com
 Description: Automatically converts keywords into contextual in-text Amazon affiliate links
-Author: Gary Cornelisse
+Author: uContext.com
 Author URI: http://www.uContext.com
 Tags: Amazon, affiliate, contextual, links, ads, advertising, context, intext, hopads
-Version: 3.9
-Tested up to: 4.1.1
-Contributors: gcornelisse
+Version: 3.9.1
 
 Automatically converts keywords into contextual in-text Amazon affiliate links
 

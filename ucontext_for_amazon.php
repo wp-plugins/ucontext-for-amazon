@@ -3,12 +3,12 @@
  Plugin Name: uContext for Amazon
  Plugin URI: http://www.uContext.com/
  Description: In-text Amazon affiliate links
- Version: 3.9
+ Version: 3.9.1
  Author: Summit Media Concepts LLC
  Author URI: http://www.SummitMediaConcepts.com/
  */
 
-define('UCONTEXT4A_VERSION',		'3.9');
+define('UCONTEXT4A_VERSION',		'3.9.1');
 
 define('UCONTEXT4A_PATH',			dirname(__FILE__));
 define('UCONTEXT4A_APP_PATH',		UCONTEXT4A_PATH.'/app');

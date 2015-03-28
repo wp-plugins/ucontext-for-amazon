@@ -30,7 +30,7 @@ class Ucontext4a_Base
 
 	public static function processPost($post_id, $force = false)
 	{
-		if ($force || !(int)get_post_meta($post_id, 'ucontext4a_last_process', 0))
+		if ($force || !(int)get_post_meta($post_id, 'ucontext4a_last_process', true))
 		{
 			if ((int)$post_id && !wp_is_post_revision($post_id))
 			{
@@ -42,7 +42,7 @@ class Ucontext4a_Base
 
 				$auto_keywords = Ucontext4a_Keyword::findKeywordsInContent($post->post_title, $post->post_content, $keyword_hints);
 
-				update_post_meta($post_id, 'ucontext4a_auto_keywords', serialize($auto_keywords));
+				update_post_meta($post_id, 'ucontext4a_auto_keywords', $auto_keywords);
 				update_post_meta($post_id, 'ucontext4a_last_process', current_time('timestamp'));
 
 				self::saveKeywordsToMainList(array_keys($auto_keywords), 'auto');

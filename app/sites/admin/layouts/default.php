@@ -49,3 +49,7 @@ if (version_compare(UCONTEXT4A_VERSION, get_option('rlm_version_'.self::$name, U
 	</tr>
 	</table>
 </div>
+<?php
+require_once UCONTEXT4A_APP_PATH.'/Ucontext4a_Cron.php';
+Ucontext4a_Cron::init();
+Ucontext4a_Cron::updateKeywordSearchResults();
